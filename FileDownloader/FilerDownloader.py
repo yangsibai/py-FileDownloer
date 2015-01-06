@@ -148,7 +148,6 @@ class FileDownloader():
             'speed': '%s/s' % util.readable_size(self.meta['size'] /
                                                  self.elapsed_time)
         }
-        return self.report
 
 
 if __name__ == "__main__":
