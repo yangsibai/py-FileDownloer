@@ -6,6 +6,7 @@ from os import path
 import multiprocessing
 import Queue
 import time
+import shutil
 
 
 class FileDownloader():
@@ -103,10 +104,17 @@ class FileDownloader():
                     ck_path = self.chunk_path(i)
                     with open(ck_path, 'r') as ck_file:
                         f.write(ck_file.read())
-                        self.print_msg(
-                            "all done! elapsed time: %.3f" % self.elapsed_time)
+                self.print_msg(
+                    "all done! elapsed time: %.3f" % self.elapsed_time)
         else:
             raise Exception("not finish download")
+
+    def clean(self):
+        if path.exists(self.data_path) and path.isdir(self.data_path):
+            shutil.rmtree(self.data_path)
+
+        if not os.listdir(self.temp_dir):
+            shutil.rmtree(self.temp_dir)
 
     def chunk_range(self, index):
         _start = index * self.meta['chunk_size']
@@ -135,6 +143,7 @@ class FileDownloader():
         pool.close()
         pool.join()
         self.combine()
+        self.clean()
         print "done!"
 
     def get_report(self):
